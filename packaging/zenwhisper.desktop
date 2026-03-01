@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=ZenWhisper
+Comment=Premium Voice Dictation
+Exec=zenwhisper
+Icon=zenwhisper
+Terminal=false
+Type=Application
+Categories=Utility;AudioVideo;
+StartupNotify=true
+StartupWMClass=zenwhisper
+X-GNOME-Autostart-enabled=true

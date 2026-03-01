@@ -1,0 +1,30 @@
+#!/bin/bash
+set -e
+
+echo "Finishing ZenWhisper installation..."
+
+# Install Python dependencies that are not in apt
+# We use --break-system-packages if needed on newer Ubuntu, or just --user
+# But since this is a deb install, we should ideally use a venv or ensure global deps are there.
+# For simplicity in this dev environment, we'll try to ensure the user's pip packages are there.
+
+echo "Checking Python dependencies (faster-whisper, etc.)..."
+pip3 install --upgrade faster-whisper pynput pydub httpx sounddevice numpy --break-system-packages || \
+pip3 install faster-whisper pynput pydub httpx sounddevice numpy || true
+
+# Pre-download the base model to home of the current user if possible
+# (This might be tricky during sudo install, so we leave it for first run)
+
+# Update desktop and icon databases
+if [ -x /usr/bin/gtk-update-icon-cache ]; then
+    gtk-update-icon-cache -f -t /usr/share/icons/hicolor || true
+    # Mandatory for some GNOME versions to see the change
+    touch /usr/share/icons/hicolor || true
+fi
+if [ -x /usr/bin/update-desktop-database ]; then
+    update-desktop-database /usr/share/applications || true
+fi
+
+echo "ZenWhisper installation finished successfully!"
+echo "To use global hotkeys on Wayland, map Alt+Z to 'zenwhisper --toggle' in System Settings."
+exit 0
