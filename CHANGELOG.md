@@ -4,6 +4,12 @@ All notable changes to ZenWhisper will be documented in this file.
 
 ---
 
+## [0.9.2] — 2026-03-01
+### Changed
+- **Hotkey**: Default hotkey changed from `Alt+Z` to `Ctrl+F12`. Prevents typing unwanted characters into focused applications.
+
+---
+
 ## [0.9.1] — 2026-03-01
 ### Fixed
 - **Hotkey**: Special keys (F1–F12, Home, End, etc.) are now properly wrapped in angle brackets for pynput compatibility. Previously, assigning `Ctrl+F9` would silently fail after restart.
@@ -75,6 +81,12 @@ All notable changes to ZenWhisper will be documented in this file.
 # Журнал изменений
 
 Все значимые изменения ZenWhisper документируются в этом файле.
+
+---
+
+## [0.9.2] — 2026-03-01
+### Изменено
+- **Горячие клавиши**: Горячая клавиша по умолчанию изменена с `Alt+Z` на `Ctrl+F12`. Теперь не печатаются нежелательные символы.
 
 ---
 

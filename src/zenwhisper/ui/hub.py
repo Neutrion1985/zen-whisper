@@ -69,7 +69,7 @@ class HotkeyButton(QPushButton):
     """Custom button that captures keyboard shortcuts."""
     hotkey_changed = pyqtSignal(str)
     
-    def __init__(self, current_hotkey="<alt>+z"):
+    def __init__(self, current_hotkey="<ctrl>+<f12>"):
         super().__init__()
         self.current_hotkey = current_hotkey
         self._recording = False
@@ -284,7 +284,7 @@ class SettingsPage(HubPage):
 
         # Hotkey & System Card
         sys_group = QVBoxLayout()
-        self.hotkey_btn = HotkeyButton(config.get("hotkey") or "<alt>+z")
+        self.hotkey_btn = HotkeyButton(config.get("hotkey") or "<ctrl>+<f12>")
         sys_group.addWidget(self.hotkey_btn)
 
         row_checks = QHBoxLayout()

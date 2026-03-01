@@ -5,7 +5,7 @@ from zenwhisper.core.config import config
 class HotkeyListener:
     def __init__(self, callback):
         self.callback = callback
-        self.hotkey_str = config.get("hotkey") or '<alt>+z'
+        self.hotkey_str = config.get("hotkey") or '<ctrl>+<f12>'
         self.listener = None
         self._thread = None
 

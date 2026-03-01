@@ -15,7 +15,7 @@ class ConfigManager:
             "sound_enabled": True,
             "autostart": False,
             "mic_gain": 1.0,
-            "hotkey": "<alt>+z",
+            "hotkey": "<ctrl>+<f12>",
             "vocabulary": [],
             "snippets": {}
         }

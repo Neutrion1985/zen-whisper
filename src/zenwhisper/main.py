@@ -175,7 +175,7 @@ class ZenController(QObject):
 
     def update_tray_menu(self):
         # Fetch current hotkey and format it for display
-        raw_hk = config.get("hotkey") or "<alt>+z"
+        raw_hk = config.get("hotkey") or "<ctrl>+<f12>"
         # Simple formatting: remove angle brackets and capitalize
         display_hk = raw_hk.replace("<", "").replace(">", "").title()
         
