@@ -2,7 +2,7 @@
 
 # Скрипт для сборки .deb пакета ZenWhisper
 APP_NAME="zenwhisper"
-VERSION="0.9.0"
+VERSION="0.9.1"
 ARCH="amd64"
 DEB_DIR="dist/${APP_NAME}_${VERSION}_${ARCH}"
 

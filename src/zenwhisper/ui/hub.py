@@ -106,7 +106,13 @@ class HotkeyButton(QPushButton):
         if modifiers & Qt.KeyboardModifier.MetaModifier: parts.append("<cmd>")
         
         key_text = QKeySequence(key).toString().lower()
-        if key_text: parts.append(key_text)
+        if key_text:
+            # pynput requires special keys (F1-F12, etc.) wrapped in angle brackets
+            # e.g. <f9>, <home>, <end>, <space>, <tab>, etc.
+            # Single printable chars (a, z, 1, *) go as-is
+            if len(key_text) > 1:
+                key_text = f"<{key_text}>"
+            parts.append(key_text)
         
         if parts:
             self.current_hotkey = "+".join(parts)
