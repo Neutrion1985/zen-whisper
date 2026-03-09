@@ -24,20 +24,30 @@ class TranscriptionEngine(QObject):
             return True
         return False
 
-    def load_model(self):
-        """Loads the model in a separate thread if not already loaded."""
+    def load_model(self, force_size=None):
+        """Loads the model in a separate thread if not already loaded or different size."""
+        target_size = force_size if force_size else self.model_size
+        
         with self._load_lock:
-            if self.model is not None or self.is_loading:
+            # If model already loaded with correct size, do nothing
+            if self.model is not None and self.model_size == target_size and not self.is_loading:
                 return
             
+            # If already loading correct size, do nothing
+            if self.is_loading and self.model_size == target_size:
+                return
+                
+            self.model_size = target_size
             self.is_loading = True
+            self.model = None # Clear old model to free memory
             
         def _target():
             print(f"Loading Whisper model: {self.model_size}...")
             start_l = time.perf_counter()
             success = False
             try:
-                # Use int8 for speed/memory efficiency on CPU
+                # Use int8 for speed/memory efficiency on CPU/GPU
+                # device="auto" handles CUDA if available
                 self.model = WhisperModel(self.model_size, device="auto", compute_type="int8")
                 dur = time.perf_counter() - start_l
                 print(f"Model {self.model_size} loaded successfully in {dur:.2f}s.")
@@ -51,7 +61,7 @@ class TranscriptionEngine(QObject):
         thread = threading.Thread(target=_target, daemon=True)
         thread.start()
 
-    def transcribe(self, audio_path):
+    def transcribe(self, audio_path, return_segments=False):
         """Transcribes the given audio file."""
         if self.model is None:
             print("Error: Model not loaded yet")
@@ -67,11 +77,7 @@ class TranscriptionEngine(QObject):
                 unique_words = list(dict.fromkeys(voc_words))
                 initial_prompt = "Context: " + ", ".join(unique_words) + "."
 
-            # Get language from config for explicit passing
-            target_lang = config.get("language") or "en"
-
             # 2. Transcribe with beam_size=2 and VAD filter
-            # Support mixed languages (RU+EN) by letting Whisper auto-detect
             segments, info = self.model.transcribe(
                 audio_path, 
                 beam_size=2,
@@ -80,6 +86,17 @@ class TranscriptionEngine(QObject):
                 vad_parameters=dict(min_silence_duration_ms=500)
             )
             
+            if return_segments:
+                # Return list of dicts for easier processing
+                res = []
+                for s in segments:
+                    res.append({
+                        "start": s.start,
+                        "end": s.end,
+                        "text": s.text.strip()
+                    })
+                return res
+
             full_text = ""
             for segment in segments:
                 full_text += segment.text + " "
@@ -93,6 +110,26 @@ class TranscriptionEngine(QObject):
             import traceback
             traceback.print_exc()
             return f"Error during transcription: {str(e)}"
+
+    def format_timestamp(self, seconds):
+        """Formats seconds into SRT timestamp: HH:MM:SS,mmm"""
+        td_hours = int(seconds // 3600)
+        td_mins = int((seconds % 3600) // 60)
+        td_secs = int(seconds % 60)
+        td_msecs = int((seconds - int(seconds)) * 1000)
+        return f"{td_hours:02}:{td_mins:02}:{td_secs:02},{td_msecs:03}"
+
+    def to_srt(self, segments):
+        """Converts segments list (from transcribe(return_segments=True)) into SRT string."""
+        srt_lines = []
+        for i, seg in enumerate(segments, 1):
+            start = self.format_timestamp(seg["start"])
+            end = self.format_timestamp(seg["end"])
+            text = seg["text"]
+            srt_lines.append(f"{i}")
+            srt_lines.append(f"{start} --> {end}")
+            srt_lines.append(f"{text}\n")
+        return "\n".join(srt_lines)
 
 # Global instance
 engine = TranscriptionEngine(model_size="base")

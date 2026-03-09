@@ -30,6 +30,7 @@ class WaveformWidget(QWidget):
         self.pulse_phase = 0.0
         self.opacity = 0.0      # For fade in/out
         self.color_factor = 0.0  # 0.0 = Normal (Cyan/Purple), 1.0 = Processing (Yellow Neon)
+        self.pulse_timer = 0.0   # For automatic amplitude pulse during processing
         
         # Multi-layer waves with neon colors
         self.waves = [
@@ -54,23 +55,30 @@ class WaveformWidget(QWidget):
         # State logic
         is_visible = self.active or self.processing
         
-        # Opacity: Factor 0.04 results in ~1.2s fade @ 60fps (very premium)
+        # Opacity: Factor 0.025 results in ~1.5s fade @ 60fps (premium feel)
         target_opacity = 1.0 if is_visible else 0.0
-        self.opacity += (target_opacity - self.opacity) * 0.04
+        self.opacity += (target_opacity - self.opacity) * 0.025
         
         # Color & Amplitude preservation during fade-out
         if is_visible:
-            # Active path
-            target_color = 1.0 if self.processing else 0.0
-            self.color_factor += (target_color - self.color_factor) * 0.1
-            self.amplitude += (self.target_amplitude - self.amplitude) * 0.12
+            # Smoothly transition between normal (0.0) and processing (1.0)
+            target_color_factor = 1.0 if self.processing else 0.0
+            self.color_factor += (target_color_factor - self.color_factor) * 0.015 # Extra slow transition
+            
+            # Calculate automatic breathing for processing mode
+            self.pulse_timer += 0.05
+            auto_amp = 0.2 + 0.15 * math.sin(self.pulse_timer)
+            
+            # Blend between reactive amplitude (mic) and automatic pulse (processing)
+            # based on how far we are in the visual transition
+            current_target = (1.0 - self.color_factor) * self.target_amplitude + self.color_factor * auto_amp
+            self.amplitude += (current_target - self.amplitude) * 0.1
         else:
             # Fading out path: "Living Fade"
-            # Keep the amplitude alive (0.2) so it doesn't look like a flat line
-            # but also shrink it slightly from its last state.
-            self.amplitude += (0.2 - self.amplitude) * 0.04
+            # Keep a small "ghost" movement alive (0.1) so it doesn't just snap to line
+            self.amplitude += (0.1 - self.amplitude) * 0.05
             
-            if self.opacity < 0.02 and not is_visible:
+            if self.opacity < 0.01 and not is_visible:
                 self.hide()
                 self.color_factor = 0.0 # Reset for next use
                 self.amplitude = 0.05
@@ -149,14 +157,21 @@ class WaveformWidget(QWidget):
                 x = padding + t * draw_w
                 envelope = math.sin(t * math.pi)
                 
-                if self.processing or (not self.active and self.color_factor > 0.5):
-                    # Pulsing active wave
-                    y_offset = math.sin(t * 3.0 * math.pi + self.pulse_phase) * (h * 0.22) * envelope
-                else:
-                    # Reactive wave
-                    y1 = math.sin(t * 4.0 * wave_cfg['freq'] + self.phase * wave_cfg['speed'] * 12)
-                    y2 = math.cos(t * 7.0 * wave_cfg['freq'] + self.phase * wave_cfg['speed'] * 18) * 0.4
-                    y_offset = (y1 + y2) * self.amplitude * (h * 0.45) * envelope
+                envelope = math.sin(t * math.pi)
+                
+                # REACTIVE wave (voice)
+                y_reactive = (math.sin(t * 4.0 * wave_cfg['freq'] + self.phase * wave_cfg['speed'] * 12) + 
+                             math.cos(t * 7.0 * wave_cfg['freq'] + self.phase * wave_cfg['speed'] * 18) * 0.4)
+                y_reactive *= self.amplitude * (h * 0.45)
+                
+                # PROCESSING wave (sine pulse)
+                y_processing = math.sin(t * 3.0 * math.pi + self.pulse_phase) * (h * 0.22)
+                
+                # GEOMETRIC MORPHING: Blend the shapes based on color_factor
+                # When color_factor is 0.0, we see text/mic wave. 
+                # At 1.0, we see the steady processing sine wave.
+                y_offset = ((1.0 - self.color_factor) * y_reactive + 
+                            self.color_factor * y_processing) * envelope
                 
                 points.append((x, mid_y + y_offset))
             

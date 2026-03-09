@@ -16,6 +16,7 @@ class ConfigManager:
             "autostart": False,
             "mic_gain": 1.0,
             "hotkey": "<ctrl>+<f12>",
+            "analyst_model_size": "medium",
             "vocabulary": [],
             "snippets": {}
         }

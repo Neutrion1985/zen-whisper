@@ -43,13 +43,29 @@ class AudioRecorder:
                     rms = np.sqrt(np.mean(boosted**2))
                     self.level_callback(rms)
 
-        self._stream = sd.InputStream(
-            samplerate=self.sample_rate,
-            channels=self.channels,
-            device=self.device_id,
-            callback=callback
-        )
-        self._stream.start()
+        try:
+            self._stream = sd.InputStream(
+                samplerate=self.sample_rate,
+                channels=self.channels,
+                device=self.device_id,
+                callback=callback
+            )
+            self._stream.start()
+        except Exception as e:
+            print(f"ERROR: Failed to start recording on device {self.device_id}: {e}")
+            if self.device_id is not None:
+                print("Falling back to default device...")
+                self.device_id = None
+                self._stream = sd.InputStream(
+                    samplerate=self.sample_rate,
+                    channels=self.channels,
+                    device=None,
+                    callback=callback
+                )
+                self._stream.start()
+            else:
+                self.recording = False
+                raise e
         print(f"Recording started... (gain={self.gain}x)")
 
     def stop_recording(self):

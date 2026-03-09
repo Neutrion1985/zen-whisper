@@ -2,7 +2,7 @@
 
 # Скрипт для сборки .deb пакета ZenWhisper
 APP_NAME="zenwhisper"
-VERSION="0.9.2"
+VERSION="1.1.4"
 ARCH="amd64"
 DEB_DIR="dist/${APP_NAME}_${VERSION}_${ARCH}"
 
@@ -60,8 +60,8 @@ EOF
 chmod 755 "${DEB_DIR}/usr/bin/${APP_NAME}"
 
 # 6. Собираем пакет
-# Согласно GEMINI.md: название должно быть Название проекта_amd64.deb (без версии)
-OUTPUT_FILE="dist/${APP_NAME}_${ARCH}.deb"
+# Согласно GEMINI.md: название должно быть НазваниеПроекта_Версия_Архитектура.deb
+OUTPUT_FILE="dist/${APP_NAME}_${VERSION}_${ARCH}.deb"
 dpkg-deb --build "${DEB_DIR}" "${OUTPUT_FILE}"
 
 echo "Done! Package created at ${OUTPUT_FILE}"

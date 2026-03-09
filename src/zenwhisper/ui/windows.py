@@ -11,6 +11,7 @@ import sounddevice as sd
 from zenwhisper.core.recorder import recorder
 from zenwhisper.core.translator import translator
 from zenwhisper.core.config import config
+from zenwhisper.ui.styles import ZenColors, ZenStyles
 
 class GlassWindow(QWidget):
     """Base class for premium glassmorphic windows."""
@@ -21,60 +22,7 @@ class GlassWindow(QWidget):
         self.setFixedSize(width, height)
         
         # Style
-        self.setStyleSheet("""
-            QWidget {
-                background-color: #121218;
-                color: #E0E0E0;
-                font-family: 'Segoe UI', Roboto, sans-serif;
-            }
-            QLabel {
-                font-size: 14px;
-            }
-            QPushButton {
-                background-color: #1F1F2E;
-                border: 1px solid #33334D;
-                border-radius: 8px;
-                padding: 10px;
-                font-weight: bold;
-                color: #00FFFF;
-            }
-            QPushButton:hover {
-                background-color: #2D2D44;
-                border-color: #00FFFF;
-            }
-            QComboBox {
-                background-color: #1F1F2E;
-                border: 1px solid #33334D;
-                border-radius: 8px;
-                padding: 5px;
-                color: white;
-            }
-            QCheckBox {
-                spacing: 10px;
-            }
-            QScrollArea {
-                border: none;
-                background-color: transparent;
-            }
-            QSlider::groove:horizontal {
-                border: 1px solid #33334D;
-                height: 8px;
-                background: #1F1F2E;
-                border-radius: 4px;
-            }
-            QSlider::handle:horizontal {
-                background: #00FFFF;
-                border: 1px solid #00CCCC;
-                width: 18px;
-                margin: -5px 0;
-                border-radius: 9px;
-            }
-            QSlider::sub-page:horizontal {
-                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-                    stop:0 #006666, stop:1 #00FFFF);
-                border-radius: 4px;
-            }
-        """)
+        self.setStyleSheet(ZenStyles.MAIN_WINDOW + ZenStyles.CARD + ZenStyles.INPUT + ZenStyles.BUTTON_PRIMARY)
 
     def retranslate_ui(self):
         self.setWindowTitle(translator.get(self.title_key))
@@ -169,7 +117,7 @@ class SettingsWindow(GlassWindow):
         
         # Header
         self.header = QLabel(translator.get("settings"))
-        self.header.setStyleSheet("font-size: 24px; font-weight: bold; color: #00FFFF;")
+        self.header.setStyleSheet(f"font-size: 24px; font-weight: bold; color: {ZenColors.TEXT_PRIMARY};")
         layout.addWidget(self.header)
         
         # Language Selection
@@ -246,18 +194,19 @@ class SettingsWindow(GlassWindow):
         # Download Progress
         self.progress_bar = QProgressBar()
         self.progress_bar.setVisible(False)
-        self.progress_bar.setStyleSheet("""
-            QProgressBar {
-                border: 1px solid #33334D;
+        self.progress_bar.setStyleSheet(f"""
+            QProgressBar {{
+                border: 1px solid {ZenColors.BORDER};
                 border-radius: 5px;
                 text-align: center;
-                height: 15px;
+                height: 12px;
                 font-size: 10px;
-            }
-            QProgressBar::chunk {
-                background-color: #00FFFF;
-                width: 10px;
-            }
+                color: transparent;
+            }}
+            QProgressBar::chunk {{
+                background-color: {ZenColors.PRIMARY};
+                border-radius: 4px;
+            }}
         """)
         
         model_layout.addWidget(self.model_label)
@@ -442,7 +391,7 @@ class HistoryWindow(GlassWindow):
         
         # Header
         self.header = QLabel(translator.get("transcription_history"))
-        self.header.setStyleSheet("font-size: 20px; font-weight: bold; color: #BF00FF;")
+        self.header.setStyleSheet(f"font-size: 20px; font-weight: bold; color: {ZenColors.PRIMARY};")
         layout.addWidget(self.header)
         
         # Scroll Area for history items
@@ -466,14 +415,7 @@ class HistoryWindow(GlassWindow):
 
     def add_item(self, text):
         frame = QFrame()
-        frame.setStyleSheet("""
-            QFrame {
-                background-color: #1F1F2E;
-                border-radius: 10px;
-                padding: 10px;
-                margin-bottom: 5px;
-            }
-        """)
+        frame.setObjectName("PremiumCard")
         item_layout = QVBoxLayout(frame)
         
         label = QLabel(text)

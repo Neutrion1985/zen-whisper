@@ -8,11 +8,16 @@ from PyQt6.QtGui import QIcon, QPainter, QColor, QPen, QPixmap
 from PyQt6.QtCore import QCoreApplication, QTimer, Qt, pyqtSignal, QObject
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 
+# Force UTF-8 environment BEFORE any other imports to prevent PyAV/FFmpeg encoding issues
+os.environ["PYTHONIOENCODING"] = "utf-8"
+os.environ["LANG"] = "C.UTF-8"
+os.environ["LC_ALL"] = "C.UTF-8"
+
 # Force UTF-8 for all stdout/stderr communication
-if sys.stdout.encoding != 'utf-8':
+if sys.stdout and sys.stdout.encoding != 'utf-8':
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-if sys.stderr.encoding != 'utf-8':
+if sys.stderr and sys.stderr.encoding != 'utf-8':
     import io
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
@@ -162,8 +167,11 @@ class ZenController(QObject):
         
         menu.addSeparator()
         
+        analyst_action = menu.addAction("🎬 " + translator.get("nav_analyst"))
+        analyst_action.triggered.connect(self.show_analyst)
+
         settings_action = menu.addAction(translator.get("settings"))
-        settings_action.triggered.connect(self.show_hub)
+        settings_action.triggered.connect(self.show_settings)
         
         menu.addSeparator()
         
@@ -183,23 +191,23 @@ class ZenController(QObject):
         base_text = translator.get("dictation_toggle")
         self.toggle_action.setText(f"{base_text} ({display_hk})")
 
-    def show_hub(self):
-        self.hub_window.show()
-        self.hub_window.raise_()
-        self.hub_window.activateWindow()
+    def show_hub(self, page_index=0):
+        self.hub_window.show_page(page_index)
 
     def show_settings(self):
-        self.hub_window.switch_page(0) # Settings is index 0
-        self.show_hub()
+        self.show_hub(0)
+
+    def show_analyst(self):
+        self.show_hub(1)
 
     def show_history(self):
-        self.hub_window.switch_page(1) # History is index 1
-        self.show_hub()
+        self.show_hub(2)
 
     def on_transcription_finished(self, text):
         if not text or not text.strip():
-            # Reset icon to normal if nothing found
+            # Reset icon to normal and hide waveform if nothing found
             self.tray.setIcon(self.get_icon("normal"))
+            self.waveform.hide_zen()
             return
             
         start_t = time.perf_counter()
@@ -273,11 +281,18 @@ class ZenController(QObject):
             
         if not recorder.recording:
             # START RECORDING
-            self.tray.setIcon(self.get_icon("recording"))
-            recorder.start_recording(level_callback=self.waveform.set_amplitude)
-            sounds.play_start()
-            self.waveform.show_zen()
-            self.update_tray_menu()
+            try:
+                self.tray.setIcon(self.get_icon("recording"))
+                recorder.start_recording(level_callback=self.waveform.set_amplitude)
+                sounds.play_start()
+                self.waveform.show_zen()
+                self.update_tray_menu()
+            except Exception as e:
+                print(f"CRITICAL: Failed to toggle recording: {e}")
+                self.tray.setIcon(self.get_icon("normal"))
+                err_msg = f"Audio Error: {e}"
+                self.tray.showMessage("ZenWhisper", err_msg, QSystemTrayIcon.MessageIcon.Critical, 5000)
+                self.waveform.hide_zen()
         else:
             # STOP RECORDING -> START THINKING
             self.tray.setIcon(self.get_icon("processing"))
@@ -291,6 +306,7 @@ class ZenController(QObject):
                 threading.Thread(target=self.process_transcription, args=(wav_path,), daemon=True).start()
             else:
                 self.tray.setIcon(self.get_icon("normal"))
+                self.waveform.hide_zen()
 
     def process_transcription(self, wav_path):
         # Already handled by state change in on_toggle
@@ -300,6 +316,7 @@ class ZenController(QObject):
                 self.transcription_ready.emit(text)
             else:
                 self.tray.setIcon(self.get_icon("normal"))
+                self.waveform.hide_zen()
         except Exception as e:
             print(f"DEBUG: Error during transcription: {e}")
             self.tray.setIcon(self.get_icon("normal"))

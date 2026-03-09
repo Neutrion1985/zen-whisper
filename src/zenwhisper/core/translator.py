@@ -56,7 +56,25 @@ class Translator:
                 "btn_download": "Download & Apply",
                 "btn_save": "Save & Apply",
                 "model_installed": "Model installed",
-                "model_not_installed": "Model not installed"
+                "model_not_installed": "Model not installed",
+                "nav_analyst": "Analyst",
+                "nav_analyst_desc": "Transcribe video/audio files into text or SRT subtitles.",
+                "drop_file_here": "Drop audio/video file here or click +",
+                "start_analysis": "Start Analysis",
+                "download_result": "Download Result",
+                "view_text": "Text View",
+                "view_srt": "Subtitles (SRT)",
+                "model_dictation": "Dictation Model",
+                "model_analyst": "Analyst Model",
+                "model_type": "Type",
+                "model_selection": "Model Selection",
+                "model_status_col": "Status",
+                "donate": "Support Project",
+                "version": "Version",
+                "history_text": "Transcribed Text",
+                "actions": "Actions",
+                "copy_text": "Copy Text",
+                "new_analysis": "New Analysis"
             },
             "ru": {
                 "settings": "Настройки",
@@ -112,7 +130,25 @@ class Translator:
                 "btn_download": "Скачать и применить",
                 "btn_save": "Сохранить и применить",
                 "model_installed": "Модель установлена",
-                "model_not_installed": "Модель не установлена"
+                "model_not_installed": "Модель не установлена",
+                "nav_analyst": "Анализ",
+                "nav_analyst_desc": "Транскрибация видео/аудио файлов в текст или субтитры SRT.",
+                "drop_file_here": "Перетяните файл сюда или нажмите +",
+                "start_analysis": "Начать анализ",
+                "download_result": "Скачать результат",
+                "view_text": "Текст",
+                "view_srt": "Субтитры (SRT)",
+                "model_dictation": "Модель для диктовки",
+                "model_analyst": "Модель для анализа",
+                "model_type": "Тип",
+                "model_selection": "Выбор модели",
+                "model_status_col": "Статус",
+                "donate": "Поддержать проект",
+                "version": "Версия",
+                "history_text": "Текст записи",
+                "actions": "Действия",
+                "copy_text": "Копировать текст",
+                "new_analysis": "Новый анализ"
             }
         }
 

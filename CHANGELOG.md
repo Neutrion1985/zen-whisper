@@ -4,77 +4,84 @@ All notable changes to ZenWhisper will be documented in this file.
 
 ---
 
-## [0.9.2] — 2026-03-01
+## [1.1.4] — 2026-03-09
+### Added
+- **ZenSwitch v2**: Completely redesigned toggle switches with programmatic painting.
+- **Neon Glow**: Added a soft neon blue halo effect when the switch is ON.
+- **Premium Buttons**: Created `PremiumAddButton` and `PremiumCopyButton` with manual `QPainter` drawing for pixel-perfect icons.
+- **UI States**: Guaranteed high-contrast "ON" state with vibrant blue background.
+
+## [1.1.3] — 2026-03-09
+### Added
+- **ZenSwitch**: Implemented modern animated toggle switches (instead of checkboxes) for System settings.
+- **Sidebar**: Added application version label and a "Support Project" button.
+- **UI**: New high-visibility "+" icons for Vocabulary and Snippets.
+### Fixed
+- **UI State**: Guaranteed visibility of "ON" state for toggle switches with neon blue background.
+- **Stability**: Fixed startup crash caused by incorrect QSS stylesheet references.
+- **History**: Improved "Copy" button sizing for better accessibility (full-width in cell).
+- **Localization**: Translated table headers in AI Model Settings.
+
+## [1.1.1] — 2026-03-08
+### Fixed
+- **Recorder**: Implemented smart microphone fallback. If the saved microphone ID is invalid (common after reboot), it automatically switches to the system default.
+- **Controller**: Added error handling for recording starup with tray notifications.
+
+## [1.1.0] — 2026-03-08
+### Added
+- **Waveform**: Full geometric morphing (shape blending) between mic input and processing sine wave.
+- **UI States**: Versioning lock in skill `my-skill-zenwhisper-ui-states`.
+
 ### Changed
-- **Hotkey**: Default hotkey changed from `Alt+Z` to `Ctrl+F12`. Prevents typing unwanted characters into focused applications.
+- **Versioning**: SemVer re-indexing (2.1.0 -> 1.1.0) to maintain logical history.
 
 ---
 
-## [0.9.1] — 2026-03-01
-### Fixed
-- **Hotkey**: Special keys (F1–F12, Home, End, etc.) are now properly wrapped in angle brackets for pynput compatibility. Previously, assigning `Ctrl+F9` would silently fail after restart.
+## [1.0.5] — 2026-03-08
+### Improved
+- **Waveform**: Cinematic transition speed lowered to 0.015 for extra smooth state switching.
 
 ---
 
-## [0.9.0] — 2026-03-01
+## [1.0.4] — 2026-03-08
 ### Added
-- **GitHub**: Project published to GitHub with GPL-3.0 license.
-- **Sidebar**: Widened to 110px with 80×80 buttons (28px emoji icons) for better visibility.
-- **Skill**: Saved QPainter icon generation technique to `my-skill-zenwhisper-ui-states`.
+- **Waveform**: Initial morphing logic (color and amplitude blending) between recording and processing.
 
 ---
 
-## [0.8.9] — 2026-03-01
-### Fixed
-- **Icons**: Qt QSS does not support `data:` URIs. Replaced with real PNG files generated on disk via QPainter. Checkmarks and ComboBox arrows are now always visible.
-
----
-
-## [0.8.6] — 2026-03-01
+## [1.0.3] — 2026-03-08
 ### Added
-- **Slider**: Neon gradient fill for the slider track (`sub-page`), square-oval handle.
-- **AI Status**: "Model installed" / "Model not installed" labels.
+- **Waveform**: Pulsing amplitude during processing (Deep Yellow Neon).
+- **Waveform**: Graceful fade-out (opacity decay) after transcription finished.
+
+---
+
+## [1.0.2] — 2026-03-08
 ### Changed
-- **Checkbox**: Black SVG checkmark on cyan background.
-- **ComboBox**: Right padding for dropdown arrow alignment.
+- **Performance**: Removed `QProxyStyle` to eliminate UI lags.
+- **UI**: Implemented manual `paintEvent` chevron drawing for QComboBox.
 
 ---
 
-## [0.8.5] — 2026-03-01
-### Fixed
-- **Scroll**: Mouse wheel over dropdowns/sliders now scrolls the page, not the widget.
-- **Sidebar**: Expanded to 90px with 70×70 buttons. Icons fully visible.
-- **Labels**: Removed duplicate parameter names in settings cards.
-- **Checkbox**: Added clear SVG checkmark indicator.
-
----
-
-## [0.8.4] — 2026-03-01
+## [1.0.1] — 2026-03-08
 ### Added
-- **Scrollbar**: Restored QScrollArea with custom neon scrollbar.
-- **Premium Cards**: Increased spacing, margins, and glassmorphism effects.
+- **UI**: Custom dropdown arrows (chevrons) for all ComboBoxes.
+- **UI**: AI Model status table (Downloaded / In Cloud) in Settings.
 
 ---
 
-## [0.8.3] — 2026-02-28
+## [1.0.0] — 2026-03-07
 ### Added
-- **Zen Hub**: Premium settings window with Glassmorphism design.
-- **NoWheel Widgets**: ComboBox and Slider ignore mouse wheel events.
-- **Smart Scroll**: Page scrolling restored with custom scrollbar.
+- **Zen Analyst**: New module for offline video/audio transcription via Drag-and-Drop.
+- **Premium UI**: Total Glassmorphism overhaul (Slate-950, Slate-900).
+- **Styling**: Centralized design system in `styles.py`.
 
 ---
 
-## [0.7.x] — 2026-02-28
+## [0.9.x] — 2026-03-01
 ### Added
-- Core voice dictation functionality.
-- Tray icon with recording/processing states.
-- Waveform overlay widget.
-- History, Vocabulary, and Snippets pages.
-- Multi-model support (tiny → large-v3).
-- Sound feedback (start/stop).
-- Russian/English translations.
-
----
+- Initial public release on GitHub.
+- Basic dictation engine and tray-based control.
 
 ---
 
@@ -84,72 +91,83 @@ All notable changes to ZenWhisper will be documented in this file.
 
 ---
 
-## [0.9.2] — 2026-03-01
+## [1.1.4] — 2026-03-09
+### Добавлено
+- **ZenSwitch v2**: Полная переработка переключателей с использованием программной отрисовки.
+- **Неоновый эффект**: Добавлен эффект мягкого синего ореола (glow) при включении.
+- **Премиальные кнопки**: Созданы классы `PremiumAddButton` и `PremiumCopyButton` с ручной отрисовкой через `QPainter` для идеально четких иконок.
+- **Визуальный статус**: Гарантированно яркий синий фон в режиме «Включено» для максимальной наглядности.
+
+---
+
+## [1.1.3] — 2026-03-09
+### Добавлено
+- **ZenSwitch**: Внедрены современные анимированные переключатели (вместо чекбоксов) в настройках системы.
+- **Sidebar**: Добавлен вывод версии приложения и кнопка «Поддержать проект».
+- **UI**: Новые заметные иконки «+» в разделах Словарь и Сниппеты.
+### Исправлено
+- **Визуальный статус**: Гарантированное отображение синего неонового фона в режиме «Включено» для переключателей.
+- **Стабильность**: Устранена критическая ошибка запуска, связанная с некорректными ссылками на стили.
+- **История**: Кнопка копирования теперь занимает всю ширину ячейки для удобства нажатия.
+- **Локализация**: Переведены заголовки столбцов в настройках мощности ИИ.
+
+## [1.1.1] — 2026-03-08
+### Исправлено
+- **Recorder**: Реализован «умный» переход на микрофон по умолчанию. Если сохраненный ID микрофона стал невалидным (часто после перезагрузки), приложение автоматически выбирает дефолтное устройство.
+- **Controller**: Добавлена обработка ошибок при старте записи с выводом уведомлений в трее.
+
+## [1.1.0] — 2026-03-08
+### Добавлено
+- **Waveform**: Полный геометрический морфинг (shape blending) между входом микрофона и синусоидой обработки.
+- **UI States**: Фиксация правил версионирования в скилле `my-skill-zenwhisper-ui-states`.
+
 ### Изменено
-- **Горячие клавиши**: Горячая клавиша по умолчанию изменена с `Alt+Z` на `Ctrl+F12`. Теперь не печатаются нежелательные символы.
+- **Версионирование**: Реиндексация SemVer (2.1.0 -> 1.1.0) для сохранения логической истории.
 
 ---
 
-## [0.9.1] — 2026-03-01
-### Исправлено
-- **Горячие клавиши**: Специальные клавиши (F1–F12, Home, End и др.) теперь корректно оборачиваются в угловые скобки для совместимости с pynput. Ранее назначение `Ctrl+F9` молча не работало после перезапуска.
+## [1.0.5] — 2026-03-08
+### Улучшено
+- **Waveform**: Кинематографическая скорость переходов снижена до 0.015 для сверхплавного переключения состояний.
 
 ---
 
-## [0.9.0] — 2026-03-01
+## [1.0.4] — 2026-03-08
 ### Добавлено
-- **GitHub**: Проект опубликован на GitHub с лицензией GPL-3.0.
-- **Сайдбар**: Расширен до 110px, кнопки 80×80 (эмодзи 28px) для лучшей видимости иконок.
-- **Скилл**: Сохранена техника генерации иконок через QPainter.
+- **Waveform**: Внедрена первая логика морфинга (смешивание цвета и амплитуды) между записью и обработкой.
 
 ---
 
-## [0.8.9] — 2026-03-01
-### Исправлено
-- **Иконки**: Qt QSS не поддерживает `data:` URI. Заменено на реальные PNG-файлы, генерируемые через QPainter. Галочки и стрелки комбобоксов теперь всегда видны.
-
----
-
-## [0.8.6] — 2026-03-01
+## [1.0.3] — 2026-03-08
 ### Добавлено
-- **Слайдер**: Неоновая градиентная заливка пути, квадратно-овальный ползунок.
-- **Статус ИИ**: Метки "Модель установлена" / "Модель не установлена".
+- **Waveform**: Пульсация амплитуды во время обработки (желтый неон).
+- **Waveform**: Плавное исчезновение (fade-out) после завершения транскрибации.
+
+---
+
+## [1.0.2] — 2026-03-08
 ### Изменено
-- **Чекбокс**: Чёрная галочка на циановом фоне.
-- **Комбобокс**: Правый отступ для стрелки выбора.
+- **Производительность**: Удален `QProxyStyle` для устранения задержек интерфейса.
+- **UI**: Реализована ручная отрисовка шевронов (стрелок) в `paintEvent` для QComboBox.
 
 ---
 
-## [0.8.5] — 2026-03-01
-### Исправлено
-- **Скролл**: Колесо мыши над виджетами теперь прокручивает страницу, а не меняет значения.
-- **Сайдбар**: Расширен до 90px, кнопки 70×70. Иконки видны полностью.
-- **Метки**: Удалены дублирующиеся названия параметров.
-- **Чекбокс**: Добавлена чёткая SVG-галочка.
-
----
-
-## [0.8.4] — 2026-03-01
+## [1.0.1] — 2026-03-08
 ### Добавлено
-- **Скроллбар**: Восстановлен QScrollArea с кастомным неоновым скроллбаром.
-- **Премиальные карточки**: Увеличены отступы и эффекты Glassmorphism.
+- **UI**: Кастомные стрелки (шевроны) для всех выпадающих списков.
+- **UI**: Таблица статуса моделей ИИ (Скачано / В облаке) в настройках.
 
 ---
 
-## [0.8.3] — 2026-02-28
+## [1.0.0] — 2026-03-07
 ### Добавлено
-- **Zen Hub**: Премиальное окно настроек с дизайном Glassmorphism.
-- **NoWheel виджеты**: ComboBox и Slider игнорируют колесо мыши.
-- **Умный скролл**: Восстановлена прокрутка страницы с кастомным скроллбаром.
+- **Zen Analyst**: Новый модуль для оффлайн транскрибации видео и аудио через Drag-and-Drop.
+- **Premium UI**: Глобальный редизайн в стиле Glassmorphism (Slate-950, Slate-900).
+- **Стилизация**: Централизованная система дизайна в `styles.py`.
 
 ---
 
-## [0.7.x] — 2026-02-28
+## [0.9.x] — 2026-03-01
 ### Добавлено
-- Основная функциональность голосовой диктовки.
-- Иконка в трее с состояниями записи/обработки.
-- Виджет звуковой волны.
-- Страницы истории, словаря и сниппетов.
-- Поддержка моделей (tiny → large-v3).
-- Звуковые отклики (начало/стоп).
-- Переводы на русский/английский.
+- Первый публичный релиз на GitHub.
+- Базовый движок диктовки и управление через трей.
